@@ -15,6 +15,27 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+		<!-- Style Selector="DataGridCell.statusColumn">
+			<Setter Property="FontSize" Value="24"/>
+			<Setter Property="(int:Interaction.Behaviors)">
+				<int:BehaviorCollectionTemplate>
+					<int:BehaviorCollection>
+						<ia:DataTriggerBehavior Binding="{Binding Status}" ComparisonCondition="Equal" Value="Rejected">
+							<ia:ChangePropertyAction TargetObject="DataGridCell" PropertyName="Background" Value="Yellow" />
+						</ia:DataTriggerBehavior>
+					</int:BehaviorCollection>
+				</int:BehaviorCollectionTemplate>
+			</Setter>
+		</Style -->
 
+    <StackPanel Orientation="Vertical">
+        <DataGrid AutoGenerateColumns="false" Items="{Binding Banknotes}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="NoteId" Binding="{Binding Id}" />
+                <DataGridTextColumn Header="Currency" Binding="{Binding Currency}" />
+                <DataGridTextColumn Header="Denomination" Binding="{Binding Denomination}" />
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </StackPanel>
 </Window>
