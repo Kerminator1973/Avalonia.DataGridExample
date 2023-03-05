@@ -14,7 +14,7 @@ namespace Avalonia.DataGridExample.Converters
             return status switch
             {
                 "Rejected" => Brushes.Red,
-                _ => Brushes.Green
+                _ => null
             };
         }
 
