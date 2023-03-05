@@ -62,3 +62,61 @@ The selector is good, because it changes the font size of the cells in the 'Stat
 Under the debugger, the Developer Console (F12) definitely says that DataGridRow and its children (DataGridCells) refer to a Banknote object (the element of the ObservableCollection).
 
 All the sings claim that the DataContext of the ChangePropertyAction refers to the data context of the ViewModel.
+
+## Using a converter as an alternative solution
+
+The converter is a class that implements the **IValueConverter** interface. The main purpose is to convert a value of one attribute into a value of another attribute. The most important part of the conversion is the ability to replace not only a value, but also a type.
+
+There should be two methods implemented in your converter: Convert() and Convertback(). The second method is often remains not implemented - it is only useful when two-sided binding is used. 
+
+Please, have a look at the implementation of the class:
+
+``` csharp
+public class StatusConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        var status = value as string;
+
+        return status switch
+        {
+            "Rejected" => Brushes.Red,
+            _ => null
+        };
+    }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+```
+
+If we want to use the converter in the UI element, we should create a static instance of this class:
+
+``` csharp
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        ...
+		xmlns:converter="using:BvsDesktopLinux.Converters">
+
+    <Window.Resources>
+        <converter:StatusConverter x:Key="StatusConverter" />
+    </Window.Resources>
+```
+
+In addition, we can use the instance of converter for binding properties:
+
+``` csharp
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        ...
+		xmlns:models="using:BvsDesktopLinux.Models">
+
+	<Window.Styles>
+        <Style Selector="DataGridCell" x:DataType="models:Banknote">
+            <Setter Property="Background" Value="{Binding Status, Converter={StaticResource StatusConverter}}" />
+        </Style>
+	</Window.Styles>
+```
+
