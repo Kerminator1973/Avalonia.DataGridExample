@@ -120,3 +120,10 @@ In addition, we can use the instance of converter for binding properties:
 	</Window.Styles>
 ```
 
+### Potential drawback of using converters
+
+Let’s say that you want to highlight in color a row, not a cell. If you use the style selector like as in the example above, the Convert() method will be called as many times as the table has columns, for each row.
+
+Frankly speaking, I don’t have any performance reports, but it can be a bit frustrating.
+
+If performance is an issue for your project, you should consider other options. For example, have a look at [an example of using the LoadingRow attribute](https://stackoverflow.com/questions/61589139/avalonia-ui-c-sharp-xaml-wpf-adjust-data-grid-row-color-based-on-column-value/75554247#75554247).
