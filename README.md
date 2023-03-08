@@ -114,7 +114,7 @@ In addition, we can use the instance of converter for binding properties:
 		xmlns:models="using:BvsDesktopLinux.Models">
 
 	<Window.Styles>
-        <Style Selector="DataGridCell" x:DataType="models:Banknote">
+        <Style Selector="DataGridCell.statusColumn" x:DataType="models:Banknote">
             <Setter Property="Background" Value="{Binding Status, Converter={StaticResource StatusConverter}}" />
         </Style>
 	</Window.Styles>
@@ -122,7 +122,15 @@ In addition, we can use the instance of converter for binding properties:
 
 ### Potential drawback of using converters
 
-Let’s say that you want to highlight in color a row, not a cell. If you use the style selector like as in the example above, the Convert() method will be called as many times as the table has columns, for each row.
+Let’s say that you want to highlight in color a row, not a cell. In this case the selector must to be modified as follows (`Selector="DataGridCell"`):
+
+``` csharp
+<Style Selector="DataGridCell" x:DataType="models:Banknote">
+    <Setter Property="Background" Value="{Binding Status, Converter={StaticResource StatusConverter}}" />
+</Style>
+```
+
+If you use the style selector like as in the example above, the Convert() method will be called as many times as the table has columns, for each row.
 
 Frankly speaking, I don’t have any performance reports, but it can be a bit frustrating.
 
