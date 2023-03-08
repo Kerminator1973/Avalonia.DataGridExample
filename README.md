@@ -127,3 +127,41 @@ Let’s say that you want to highlight in color a row, not a cell. If you use th
 Frankly speaking, I don’t have any performance reports, but it can be a bit frustrating.
 
 If performance is an issue for your project, you should consider other options. For example, have a look at [an example of using the LoadingRow attribute](https://stackoverflow.com/questions/61589139/avalonia-ui-c-sharp-xaml-wpf-adjust-data-grid-row-color-based-on-column-value/75554247#75554247).
+
+## Using CompiledBindings in DataGrid
+
+To improve the performance of the application, the bindings types have been replaced with CompiledBindings. The idea is to avoid using reflection at  runtime to extract cell values.
+
+To add compiled bindings you need to set the **x:CompileBindings** option in the description of the UI element:
+
+``` csharp
+<Window xmlns="https://github.com/avaloniaui" ...
+		x:CompileBindings="True">
+```
+
+You must also to specify the main data type of the UI element, and append the reference the namespace of a model class:
+
+``` csharp
+<Window xmlns="https://github.com/avaloniaui" ...
+		xmlns:local="using:BvsDesktopLinux.Models"
+		x:DataType="vm:MainWindowViewModel"
+		x:CompileBindings="True">
+```
+
+Next, you should replace the keyword **Binding** with **CompiledBinding**. You should also to specify a data type that you will use to access the cell values (`x:DataType="local:Banknote"`):
+
+``` csharp
+<DataGrid AutoGenerateColumns="False" Items="{CompiledBinding Banknotes}">
+    <DataGrid.Columns>
+        <DataGridTextColumn Header="{x:Static p:Resources.NoteId}" 
+                            Binding="{CompiledBinding Id}" x:DataType="local:Banknote" />
+        <DataGridTextColumn Header="{x:Static p:Resources.NoteCurrency}" 
+                            Binding="{CompiledBinding Currency}" x:DataType="local:Banknote" />
+        <DataGridTextColumn Header="{x:Static p:Resources.NoteDenomination}" 
+                            Binding="{CompiledBinding Denomination}" x:DataType="local:Banknote" />
+        <DataGridTextColumn Header="{x:Static p:Resources.Status}" 
+                            Binding="{CompiledBinding Status}" x:DataType="local:Banknote" 
+                            CellStyleClasses="statusColumn" />
+    </DataGrid.Columns>
+</DataGrid>
+```
