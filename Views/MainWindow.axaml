@@ -3,14 +3,14 @@
         xmlns:vm="using:Avalonia.DataGridExample.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:int="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+		    xmlns:int="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
         xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
-        xmlns:models="clr-namespace:Avalonia.DataGridExample.Models"
-        xmlns:converter="clr-namespace:Avalonia.DataGridExample.Converter"
+		    xmlns:converter="using:Avalonia.DataGridExample.Converters"
+		    xmlns:m="using:Avalonia.DataGridExample.Models"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Avalonia.DataGridExample.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        x:CompileBindings="True"
+		    x:CompileBindings="True"
         Icon="/Assets/avalonia-logo.ico"
         Title="Avalonia.DataGridExample">
     
@@ -18,20 +18,42 @@
     <converter:StatusConverter x:Key="StatusConverter" />
 </Window.Resources>
 
-    <Design.DataContext>
+	<Window.Resources>
+		<converter:StatusConverter x:Key="StatusConverter" />
+	</Window.Resources>
+
+	<Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
 	<Window.Styles>
-        <Style Selector="DataGridCell.statusColumn" x:DataType="models:Banknote">
-            <Setter Property="Background" Value="{Binding Status, Converter={StaticResource StatusConverter}}" />
-        </Style>
+		<!-- The setter is used to make the Background attribute dependant of a Status field's value -->
+		<Style Selector="DataGridCell.statusColumn" x:DataType="m:Banknote">
+			<Setter Property="Background" Value="{CompiledBinding Status, Converter={StaticResource StatusConverter}}" />
+		</Style>
 	</Window.Styles>
 
+	<!-- Unfortunately, the DataTriggerBehavior doesn't working yet
+	<Window.Styles>
+        <Style Selector="DataGridCell.statusColumn">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="(int:Interaction.Behaviors)">
+                <int:BehaviorCollectionTemplate>
+                    <int:BehaviorCollection>
+                        <ia:DataTriggerBehavior Binding="{Binding Status}" ComparisonCondition="Equal" Value="Rejected">
+                            <ia:ChangePropertyAction TargetObject="DataGridCell" PropertyName="Background" Value="Red" />
+                        </ia:DataTriggerBehavior>
+                    </int:BehaviorCollection>
+                </int:BehaviorCollectionTemplate>
+            </Setter>
+        </Style>
+	</Window.Styles>
+	-->
+
     <StackPanel Orientation="Vertical">
-        <DataGrid AutoGenerateColumns="false" Items="{Binding Banknotes}">
+        <DataGrid AutoGenerateColumns="false" Items="{CompiledBinding Banknotes}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="NoteId" x:DataType="models:Banknote" Binding="{Binding Id}" />
                 <DataGridTextColumn Header="Currency" x:DataType="models:Banknote" Binding="{Binding Currency}" />
