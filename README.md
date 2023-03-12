@@ -17,6 +17,15 @@ Also, some styles were added to the "App.xaml", because without them we can't vi
 </Application.Styles>
 ```
 
+Alternatively, you can use the Fluent Theme with light or dark mode:
+
+``` csharp
+<Application.Styles>
+    <FluentTheme Mode="Dark"/>
+    <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+</Application.Styles>
+```
+
 ## XAML Behaviors
 
 I also added, I included the Avalonia.XAML.Behaviors package to the .csproj and restored the dependencies.
