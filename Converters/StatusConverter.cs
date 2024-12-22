@@ -11,10 +11,14 @@ namespace Avalonia.DataGridExample.Converters
         {
             var status = value as string;
 
+            // Замечание от maxkatz6 (Maintainer of Avalonia): https://github.com/AvaloniaUI/Avalonia/discussions/17790
+            // You set null background for most of your cells, as I understand.
+            // As I mentioned above, null background is not hit - testable.You need to set Transparent at least.
+
             return status switch
             {
                 "Rejected" => Brushes.Red,
-                _ => null
+                _ => Brushes.Transparent
             };
         }
 
